@@ -37,9 +37,9 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]; then
 	if [ $result13 == $resultInt.0000000000000 ]; then
 # if so, [quot]ient is integer returned by bc division
 		quot=$resultInt
-# If result is not integer, quotient is the 13-place float
+# If result is not integer, quot is the 13 decimal place result without trailing zeros
 	else
-		quot=$result13
+		quot=$(echo "$result13" | sed 's/0*$//')
 	fi
 	echo "The quotient is $quot"
 # if intent is not supported, promise future functionality
