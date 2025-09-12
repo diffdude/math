@@ -31,12 +31,13 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]; then
 # creates result variable as num1 / num2 and pipes it into basic calculator to allow division
 # scale=13 to allow 13 decimal places
 	result13=$(echo "scale=13; $num1 / $num2" | bc)
+# creates [resultInt]eger variable with no scale to force an integer result
 	resultInt=$(echo "$num1 / $num2" | bc)
 # checks if $result is trailed by 13 zeros
 	if [ $result13 == $resultInt.0000000000000 ]; then
 # if so, [quot]ient is integer returned by bc division
 		quot=$resultInt
-# If result is not integer, $quot = $result13
+# If result is not integer, quotient is the 13-place float
 	else
 		quot=$result13
 	fi
@@ -47,3 +48,5 @@ else
 #end of if/else statement
 fi
 exit 0
+
+#test comment
