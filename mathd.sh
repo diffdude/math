@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env dash
 # determine user intent to add or subtract
 # printf allows line breaks more consistently than echo
 # line can be broken with \n or a line break in the quote
