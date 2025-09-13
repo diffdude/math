@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # determine user intent to add or subtract
-echo "Would you like to [add], [subtract] or [divide]?"
+echo "Would you like to [add], [subtract], [divide] or [multiply]?"
 # takes input as variable called "intent"
 read intent
 # if intent is to subtract, run core subtract code
@@ -42,6 +42,16 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]; then
 		quot=$(echo "$result13" | sed 's/0*$//')
 	fi
 	echo "The quotient is $quot"
+# if the intent is to multiply, run multiplication code
+elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]; then
+	echo "Enter a number to multiply"
+		read num1
+	echo "Enter another number to multiply"
+		read num2
+# creates a product variable
+	product=$(echo "$num1 * $num2" | bc)
+# returns the product
+	echo "The product is $product"
 # if intent is not supported, promise future functionality
 else
 	echo "More functionality coming soon."
