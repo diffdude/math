@@ -31,11 +31,17 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]; then
 		read num1
 	echo "Enter a denominator to divide by"
 		read num2
+# if denominator input is 0, print cannot divide by zero and exit script
+	if [ $num2 == 0 ];then
+		echo "Cannot divide by zero"
+		exit 0
+	else
 # creates result variable as num1 / num2 and pipes it into basic calculator to allow division
 # scale=13 to allow 13 decimal places
-	result13=$(echo "scale=13; $num1 / $num2" | bc)
+		result13=$(echo "scale=13; $num1 / $num2" | bc)
 # creates [resultInt]eger variable with no scale to force an integer result
-	resultInt=$(echo "$num1 / $num2" | bc)
+		resultInt=$(echo "$num1 / $num2" | bc)
+	fi
 # checks if $result is trailed by 13 zeros
 	if [ $result13 == $resultInt.0000000000000 ]; then
 # if so, [quot]ient is integer returned by bc division
