@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # determine user intent to add or subtract
-echo "Would you like to [add], [subtract], [divide] or [multiply]?"
+# printf allows line breaks more consistently than echo
+# line can be broken with \n or a line break in the quote
+printf "What would you like to do?
+[add] [subtract] [divide] [multiply] [exponent]\n"
 # takes input as variable called "intent"
 read intent
 # if intent is to subtract, run core subtract code
@@ -37,12 +40,12 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]; then
 	if [ $result13 == $resultInt.0000000000000 ]; then
 # if so, [quot]ient is integer returned by bc division
 		quot=$resultInt
-# If result is not integer, quot is the 13 decimal place result without trailing zeros
+# if result is not integer, quot is the 13 decimal place result without trailing zeros
 	else
 		quot=$(echo "$result13" | sed 's/0*$//')
 	fi
 	echo "The quotient is $quot"
-# if the intent is to multiply, run multiplication code
+# if intent is to multiply, run multiplication code
 elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]; then
 	echo "Enter a number to multiply"
 		read num1
@@ -53,8 +56,7 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]; then
 # returns the product
 	echo "The product is $product"
 # if intent is not supported, promise future functionality
-else
-	echo "More functionality coming soon."
+else echo "More functionality coming soon."
 #end of if/else statement
 fi
 exit 0
