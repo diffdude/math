@@ -55,6 +55,15 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]; then
 	product=$(echo "$num1 * $num2" | bc)
 # returns the product
 	echo "The product is $product"
+# if intent is exponent, run exponent code
+elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]; then
+	echo "Enter a base to be exponentiated"
+		read num1
+	echo "Enter an exponent"
+		read num2
+	power=$(echo "$num1 ^ $num2" | bc)
+# does not accept floats as exponents
+	echo "The power is $power"
 # if intent is not supported, promise future functionality
 else echo "More functionality coming soon."
 #end of if/else statement
