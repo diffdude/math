@@ -40,12 +40,12 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]; then
 # scale=13 to allow 13 decimal places
 		result13=$(echo "scale=13; $num1 / $num2" | bc)
 # creates [resultInt]eger variable with no scale to force an integer result
-		resultInt=$(echo "$num1 / $num2" | bc)
+		result_int=$(echo "$num1 / $num2" | bc)
 	fi
 # checks if $result is trailed by 13 zeros
-	if [ $result13 = $resultInt.0000000000000 ]; then
+	if [ $result13 = $result_int.0000000000000 ]; then
 # if so, [quot]ient is integer returned by bc division
-		quot=$resultInt
+		quot=$result_int
 # if result is not integer, quot is the 13 decimal place result without trailing zeros
 	else
 		quot=$(echo "$result13" | sed 's/0$//')
