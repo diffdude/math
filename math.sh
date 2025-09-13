@@ -61,8 +61,9 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]; then
 		read num1
 	echo "Enter an exponent"
 		read num2
-	power=$(echo "$num1 ^ $num2" | bc)
-# does not accept floats as exponents
+#	power=$(echo "$num1 ^ $num2" | bc) does not accept floats as exponents
+# constant e ^ (num2 * natural log(num1)) = num1 ^ num2; -l for complicated math
+	power=$(echo "e($num2 * l($num1))" | bc -l)
 	echo "The power is $power"
 # if intent is not supported, promise future functionality
 else echo "More functionality coming soon."
