@@ -34,7 +34,7 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]; then
 # if denominator input is 0, print cannot divide by zero and exit script
 	if [ $num2 = 0 ];then
 		echo "Cannot divide by zero"
-		exit 0
+		exit
 	else
 # creates result variable as num1 / num2 and pipes it into basic calculator to allow division
 # scale=13 to allow 13 decimal places
@@ -75,4 +75,4 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]; then
 else echo "More functionality coming soon."
 #end of if/else statement
 fi
-exit 0
+exit
