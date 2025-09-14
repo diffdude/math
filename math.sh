@@ -109,7 +109,7 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]; then
 # constant e ^ (num2 * natural log(num1)) = num1 ^ num2; -l for complicated math
 	elif [[ $(echo "$num1 + $num2" | bc) =~ \.[0-9]+ ]]; then
 		power=$(echo "e($num2 * l($num1))" | bc -l)
-	else power=$(($num1 ** $num2))	
+	else power=$(echo "$num1 ^ $num2" | bc)	
 	fi
 	echo "The power is $power"
 # if intent is not supported, promise future functionality
