@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # non-number error
 nonnum="Please use only numeric inputs"
-function start {
+start() {
 # determine user intent to add or subtract
 # printf allows line breaks more consistently than echo
 # line can be broken with \n or a line break in the quote
@@ -10,20 +10,20 @@ function start {
 	code
 }
 # reassigns initial input to result of operation 
-function operator_reassign {
+operator_reassign() {
 	num1=$result
 }
 # main body of code; interprets intent input, allows math operations
-function code {
+code() {
 # subtract operation
 if
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "subtract" ]]; then
 # input funcion definitions
-		function input2 {
+		input2() {
 		echo "Enter a number to subtract"
 		read num2
 	}
-	function input1 {
+		input1() {
 		echo "Enter a number to reduce"
 		read num1
 		input2
@@ -64,11 +64,11 @@ Would you like to perform an operation on $result? [y/n]
 # if intent is to add, accept inputs for addition operation
 elif
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "add" ]]; then
-		function input2 {
+		input2() {
 		echo "Enter a number to add"
 		read num2
 		}
-		function input1 {
+		input1() {
 			echo "Enter a number to increase"
 			read num1
 			input2
@@ -105,11 +105,11 @@ Would you like to perform an operation on $result? [y/n]
 # if intent is to divide, run code to divide
 elif
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]]; then
-		function input2 {
+		input2() {
 			echo "Enter a denominator to divide by"
 			read num2
 		}
-		function input1 {
+		input1() {
 			echo "Enter a numerator to divide"
 			read num1
 			input2
@@ -141,8 +141,9 @@ elif
 		quotient_integer=$(echo "$num1 / $num2" | bc)
 	fi
 # if quotient_13=quotient_integer with 13 trailing zeros, result is integer
-	if [[ $quotient_13 = $quotient_integer.0000000000000 ]]; then
-		result=$quotient_integer
+	if
+		[[ $quotient_13 = $quotient_integer.0000000000000 ]]; then
+			result=$quotient_integer
 # if quotient_13 is indeed a float, result is scale13 quotient without trailing zeros
 	else
 		result=$(echo "$quotient_13" | sed 's/0$//')
@@ -151,19 +152,20 @@ elif
 Would you like to perform an operation on $result? [y/n]
 	"
 	read continue
-	if [[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
-		operator_reassign
-		start
+	if
+		[[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
+			operator_reassign
+			start
 	else
 		exit
 	fi
 # if intent is to multiply, run multiplication code
 elif [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]]; then
-	function input2 {
+	input2() {
 		echo "Enter another number to multiply"
 		read num2
 		}
-	function input1 {
+	input1() {
 		echo "Enter a number to multiply"
 		read num1
 		input2
@@ -202,11 +204,11 @@ Would you like to perform an operation on $result? [y/n]
 # if intent is exponent, run exponent code
 elif
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]]; then
-		function input2 {
+		input2() {
 			echo "Enter an exponent"
 			read num2
 		}
-		function input1 {
+		input1() {
 			echo "Enter a base to be exponentiated"
 			read num1
 			input2
