@@ -117,7 +117,7 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]; then
 		exit
 #	power=$(echo "$num1 ^ $num2" | bc) does not accept floats as exponents
 # constant e ^ (num2 * natural log(num1)) = num1 ^ num2; -l for complicated math
-	elif [[ ! $(echo "$num1 + $num2" | bc) =~ \.[0-9]+ ]]; then
+	elif [[ $(echo "$num1 + $num2" | bc) =~ \.[0-9]+ ]]; then
 		result=$(echo "e($num2 * l($num1))" | bc -l)
 	else result=$(echo "$num1 ^ $num2" | bc)	
 	fi
