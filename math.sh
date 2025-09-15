@@ -23,9 +23,9 @@ if [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "subtract" ]; then
 		echo $nonnum
 		exit
 # creates [diff]erence variable as num1 - num2 and pipes it into basic calculator to allow floats
-	else diff=$(echo "$num1 - $num2" | bc)
+	else result=$(echo "$num1 - $num2" | bc)
 	fi
-	echo "The difference is $diff"
+	echo "The difference is $result"
 # if intent is to add, run add code
 elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "add" ]; then
 	echo "Enter a number to increase"
@@ -40,9 +40,9 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "add" ]; then
 		echo $nonnum
 		exit
 # creates sum variable as num1 + num2 and pipes it into basic calculator to allow floats
-	else sum=$(echo "$num1 + $num2" | bc)
+	else result=$(echo "$num1 + $num2" | bc)
 	fi
-	echo "The sum is $sum"
+	echo "The sum is $result"
 # if intent is to divide, run code to divide
 elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]; then
 	echo "Enter a numerator to divide"
@@ -62,18 +62,18 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]; then
 		exit
 # creates result variable as num1 / num2 and pipes it into basic calculator to allow division
 # scale=13 to allow 13 decimal places
-	else	result13=$(echo "scale=13; $num1 / $num2" | bc)
+	else	quotient13=$(echo "scale=13; $num1 / $num2" | bc)
 # creates [resultInt]eger variable with no scale to force an integer result
-		result_int=$(echo "$num1 / $num2" | bc)
+		quotient_int=$(echo "$num1 / $num2" | bc)
 	fi
 # checks if $result is trailed by 13 zeros
-	if [ $result13 = $result_int.0000000000000 ]; then
+	if [ $quotient13 = $quotient_int.0000000000000 ]; then
 # if so, [quot]ient is integer returned by bc division
-		quot=$result_int
+		result=$quotient_int
 # if result is not integer, quot is the 13 decimal place result without trailing zeros
-	else quot=$(echo "$result13" | sed 's/0$//')
+	else result=$(echo "$quotient13" | sed 's/0$//')
 	fi
-	echo "The quotient is $quot"
+	echo "The quotient is $result"
 # if intent is to multiply, run multiplication code
 elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]; then
 	echo "Enter a number to multiply"
@@ -88,10 +88,10 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]; then
 		echo $nonnum
 		exit
 # creates a product variable
-	else product=$(($num1 * $num2))
+	else result=$(($num1 * $num2))
 	fi
 # returns the product
-	echo "The product is $product"
+	echo "The product is $result"
 # if intent is exponent, run exponent code
 elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]; then
 	echo "Enter a base to be exponentiated"
@@ -108,12 +108,20 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]; then
 #	power=$(echo "$num1 ^ $num2" | bc) does not accept floats as exponents
 # constant e ^ (num2 * natural log(num1)) = num1 ^ num2; -l for complicated math
 	elif [[ $(echo "$num1 + $num2" | bc) =~ \.[0-9]+ ]]; then
-		power=$(echo "e($num2 * l($num1))" | bc -l)
-	else power=$(echo "$num1 ^ $num2" | bc)	
+		result=$(echo "e($num2 * l($num1))" | bc -l)
+	else result=$(echo "$num1 ^ $num2" | bc)	
 	fi
-	echo "The power is $power"
+	echo "The power is $result"
 # if intent is not supported, promise future functionality
 else echo "More functionality coming soon."
 #end of if/else statement
 fi
 exit
+
+#todo
+#allow result to be passed into $num1 for further operation
+#step1: rename resultant vars to "result"
+#step2: print "Perform operations on result?"
+#step3: if no, exit. If yes, jump to line 6
+#step4: check if $result is defined
+#step5: if yes, bypass input; $num1=$result
