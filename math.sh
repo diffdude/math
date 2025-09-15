@@ -1,18 +1,24 @@
 #!/usr/bin/env bash
+# non-number error
+nonnum="Please use only numeric inputs"
+function start {
 # determine user intent to add or subtract
 # printf allows line breaks more consistently than echo
 # line can be broken with \n or a line break in the quote
-nonnum="Please use only numeric inputs"
-function start {
-	printf "What would you like to do?\n [add] [subtract] [divide] [multiply] [exponent]\n"
+	printf "What would you like to do?\n[add] [subtract] [divide] [multiply] [exponent]\n"
 	read intent
 	code
 }
+# reassigns initial input to result of operation 
 function operator_reassign {
 	num1=$result
 }
+# main body of code; interprets intent input, allows math operations
 function code {
-if [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "subtract" ]]; then
+# subtract operation
+if
+	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "subtract" ]]; then
+# input funcion definitions
 		function input2 {
 		echo "Enter a number to subtract"
 		read num2
@@ -22,110 +28,128 @@ if [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "subtract" ]]; then
 		read num1
 		input2
 	}
-	if [[ -z "$num1" ]]; then
-		input1
+# checks if num1 is defined and defines empty variable
+	if
+		[[ -z "$num1" ]]; then
+			input1
 	else
 		input2
 	fi
-# makes sure inputs are numeric
-	if [[ $num1 =~ [a-zA-Z] ]]; then
-		echo $nonnum
-		exit
-	elif [[ $num2 =~ [a-zA-Z] ]]; then
-		echo $nonnum
-		exit
-# creates [diff]erence variable as num1 - num2 and pipes it into basic calculator to allow floats
-	else result=$(echo "$num1 - $num2" | bc)
+# makes sure inputs are numeric, exits if not
+	if
+		[[ $num1 =~ [a-zA-Z] ]]; then
+			echo $nonnum
+			exit
+	elif
+		[[ $num2 =~ [a-zA-Z] ]]; then
+			echo $nonnum
+			exit
+# creates result variable as num1 - num2 and pipes it into basic calculator to allow floats
+	else
+		result=$(echo "$num1 - $num2" | bc)
 	fi
-	echo "The difference is $result"
-	printf "Would you like to perform an operation on $result? [y/n]\n"
+# prints result and offers to continue operations on result
+	printf "The difference is $result
+Would you like to perform an operation on $result? [y/n]
+	"
 	read continue
-	if [[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
-		operator_reassign
-		start
+# if continue is chosen, start script again
+	if
+		[[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
+			operator_reassign
+			start
 	else
 		exit
 	fi
-# if intent is to add, run add code
-elif [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "add" ]]; then
-	function input2 {
-	echo "Enter a number to add"
-	read num2
-	}
-	function input1 {
-		echo "Enter a number to increase"
-		read num1
-		input2
-	}
-# if $num1 is undefined, take input, if defined, take second input
-	if [[ -z "$num1" ]]; then
-		input1
+# if intent is to add, accept inputs for addition operation
+elif
+	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "add" ]]; then
+		function input2 {
+		echo "Enter a number to add"
+		read num2
+		}
+		function input1 {
+			echo "Enter a number to increase"
+			read num1
+			input2
+		}
+	if
+		[[ -z "$num1" ]]; then
+			input1
 	else
 		input2
 	fi
-	if [[ $num1 =~ [a-zA-Z] ]]; then
-		echo $nonnum
-		exit
-	elif [[ $num2 =~ [a-zA-Z] ]]; then
-		echo $nonnum
-		exit
-# creates sum variable as num1 + num2 and pipes it into basic calculator to allow floats
+	if
+		[[ $num1 =~ [a-zA-Z] ]]; then
+			echo $nonnum
+			exit
+	elif
+		[[ $num2 =~ [a-zA-Z] ]]; then
+			echo $nonnum
+			exit
+# creates result variable as num1 + num2 and pipes it into basic calculator to allow floats
 	else
 		result=$(echo "$num1 + $num2" | bc)
 	fi
-	echo "The sum is $result"
-	printf "Would you like to perform an operation on $result? [y/n]\n"
+	printf "The sum is $result
+Would you like to perform an operation on $result? [y/n]
+	"
 	read continue
-	if [[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
-		operator_reassign
-		start
+	if
+		[[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
+			operator_reassign
+			start
 	else
 		exit
 	fi
 # if intent is to divide, run code to divide
-elif [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]]; then
-	function input2 {
-		echo "Enter a denominator to divide by"
-		read num2
-	}
-	function input1 {
-		echo "Enter a numerator to divide"
-		read num1
-		input2
-	}
-# check if $num1 is defined
-	if [[ -z "$num1" ]]; then
+elif
+	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]]; then
+		function input2 {
+			echo "Enter a denominator to divide by"
+			read num2
+		}
+		function input1 {
+			echo "Enter a numerator to divide"
+			read num1
+			input2
+		}
+	if
+		[[ -z "$num1" ]]; then
 		input1
 	else
 		input2
 	fi
-	if [[ $num1 =~ [a-zA-Z] ]]; then
-		echo $nonnum
-		exit
-	elif [[ $num2 =~ [a-zA-Z] ]]; then
-		echo $nonnum
-		exit
+	if
+		[[ $num1 =~ [a-zA-Z] ]]; then
+			echo $nonnum
+			exit
+	elif
+		[[ $num2 =~ [a-zA-Z] ]]; then
+			echo $nonnum
+			exit
 # if denominator input is 0, print cannot divide by zero and exit script
-	elif [[ $num2 = 0 ]]; then
-		echo "Cannot divide by zero"
-		exit
-# creates result variable as num1 / num2 and pipes it into basic calculator to allow division
+	elif
+		[[ $num2 = 0 ]]; then
+			echo "Cannot divide by zero"
+			exit
+# creates quotient variable as num1 / num2 and pipes it into basic calculator to allow division
 # scale=13 to allow 13 decimal places
 	else
-		quotient13=$(echo "scale=13; $num1 / $num2" | bc)
-# creates [resultInt]eger variable with no scale to force an integer result
-		quotient_int=$(echo "$num1 / $num2" | bc)
+		quotient_13=$(echo "scale=13; $num1 / $num2" | bc)
+# creates integer quotient variable with no scale to force an integer result
+		quotient_integer=$(echo "$num1 / $num2" | bc)
 	fi
-# checks if $result is trailed by 13 zeros
-	if [[ $quotient13 = $quotient_int.0000000000000 ]]; then
-# if so, [quot]ient is integer returned by bc division
-		result=$quotient_int
-# if result is not integer, quot is the 13 decimal place result without trailing zeros
+# if quotient_13=quotient_integer with 13 trailing zeros, result is integer
+	if [[ $quotient_13 = $quotient_integer.0000000000000 ]]; then
+		result=$quotient_integer
+# if quotient_13 is indeed a float, result is scale13 quotient without trailing zeros
 	else
-		result=$(echo "$quotient13" | sed 's/0$//')
+		result=$(echo "$quotient_13" | sed 's/0$//')
 	fi
-	echo "The quotient is $result"
-	printf "Would you like to perform an operation on $result? [y/n]\n"
+	printf "The quotient is $result
+Would you like to perform an operation on $result? [y/n]
+	"
 	read continue
 	if [[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
 		operator_reassign
@@ -145,90 +169,97 @@ elif [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]]; then
 		input2
 	}
 # check if $num1 is defined
-	if [[ -z "$num1" ]]; then
-		input1
-	else input2
+	if
+		[[ -z "$num1" ]]; then
+			input1
+	else
+		input2
 	fi
-	if [[ $num1 =~ [a-zA-Z] ]]; then
-		echo $nonnum
-		exit
-	elif [[ $num2 =~ [a-zA-Z] ]]; then
-		echo $nonnum
-		exit
+	if
+		[[ $num1 =~ [a-zA-Z] ]]; then
+			echo $nonnum
+			exit
+	elif
+		[[ $num2 =~ [a-zA-Z] ]]; then
+			echo $nonnum
+			exit
 # creates a product variable
 	else
 		result=$(echo "$num1 * $num2" | bc)
 	fi
 # returns the product
-	echo "The product is $result"
-	printf "Would you like to perform an operation on $result? [y/n]\n"
+	printf "The product is $result
+Would you like to perform an operation on $result? [y/n]
+	"
 	read continue
-	if [[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
-		operator_reassign
-		start
+	if
+		[[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
+			operator_reassign
+			start
 	else
 		exit
 	fi
 # if intent is exponent, run exponent code
-elif [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]]; then
-	function input2 {
-		echo "Enter an exponent"
+elif
+	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]]; then
+		function input2 {
+			echo "Enter an exponent"
 			read num2
-	}
-	function input1 {
-		echo "Enter a base to be exponentiated"
-		read num1
-		input2
-	}
+		}
+		function input1 {
+			echo "Enter a base to be exponentiated"
+			read num1
+			input2
+		}
 # check if $num1 is defined
-	if [[ -z "$num1" ]]; then
-		input1
-	else input2
+	if
+		[[ -z "$num1" ]]; then
+			input1
+	else
+		input2
 	fi
-	if [[ $num1 =~ [a-zA-Z] ]]; then
-		echo $nonnum
-		exit
-	elif [[ $num2 =~ [a-zA-Z] ]]; then
-		echo $nonnum
-		exit
-	elif [[ $num1 = 0 ]]; then
-		printf "The power is 0\n"
-		exit
-	elif [[ $num2 = 0 ]]; then
-		printf "The power is 1\n"
-		exit
+	if
+		[[ $num1 =~ [a-zA-Z] ]]; then
+			echo $nonnum
+			exit
+	elif
+		[[ $num2 =~ [a-zA-Z] ]]; then
+			echo $nonnum
+			exit
+	elif
+		[[ $num1 = 0 ]]; then
+			printf "The power is 0\n"
+			exit
+	elif
+		[[ $num2 = 0 ]]; then
+			printf "The power is 1\n"
+			exit
 #	power=$(echo "$num1 ^ $num2" | bc) does not accept floats as exponents
 # constant e ^ (num2 * natural log(num1)) = num1 ^ num2; -l for complicated math
-	elif [[ $(echo "$num1 + $num2" | bc) =~ \.[0-9]+ ]]; then
-		result=$(echo "e($num2 * l($num1))" | bc -l)
+	elif
+		[[ $(echo "$num1 + $num2" | bc) =~ \.[0-9]+ ]]; then
+			result=$(echo "e($num2 * l($num1))" | bc -l)
 	else
 		result=$(echo "$num1 ^ $num2" | bc)	
 	fi
-	echo "The power is $result"
-	printf "Would you like to perform an operation on $result? [y/n]\n"
+	printf "The power is $result
+Would you like to perform an operation on $result? [y/n]
+	"
 	read continue
-	if [[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
-	operator_reassign
-	start
+	if
+		[[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
+			operator_reassign
+			start
 	else
 		exit
 	fi
 # if intent is not supported, promise future functionality
 else
 	echo "More functionality coming soon."
+	exit
 #end of if/else statement
 fi
 }
+#end of functions
 start
-# if intent is to subtract, run core subtract code
-# pipes intent variable into a command to force input into lowercase
-
 exit
-
-#todo
-#allow result to be passed into $num1 for further operation
-#step1: rename resultant vars to "result" [done]
-#step2: print "Perform operations on result?" [done]
-#step3: if no, exit. If yes, perform code from question2
-#step4: check if $result is defined
-#step5: if yes, bypass input; $num1=$result
