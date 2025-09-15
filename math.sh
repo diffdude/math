@@ -26,6 +26,7 @@ if [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "subtract" ]; then
 	else result=$(echo "$num1 - $num2" | bc)
 	fi
 	echo "The difference is $result"
+	num1=$result
 # if intent is to add, run add code
 elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "add" ]; then
 	echo "Enter a number to increase"
@@ -43,6 +44,7 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "add" ]; then
 	else result=$(echo "$num1 + $num2" | bc)
 	fi
 	echo "The sum is $result"
+	num1=$result
 # if intent is to divide, run code to divide
 elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]; then
 	echo "Enter a numerator to divide"
@@ -74,6 +76,7 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]; then
 	else result=$(echo "$quotient13" | sed 's/0$//')
 	fi
 	echo "The quotient is $result"
+	num1=$result
 # if intent is to multiply, run multiplication code
 elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]; then
 	echo "Enter a number to multiply"
@@ -92,6 +95,7 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]; then
 	fi
 # returns the product
 	echo "The product is $result"
+	num1=$result
 # if intent is exponent, run exponent code
 elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]; then
 	echo "Enter a base to be exponentiated"
@@ -105,13 +109,20 @@ elif [ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]; then
 	if [[ $num2 =~ [a-zA-Z] ]]; then
 		echo $nonnum
 		exit
+	elif [[ $num1 = 0 ]]; then
+		printf "The power is 0\n"
+		exit
+	elif [[ $num2 = 0 ]]; then
+		printf "The power is 1\n"
+		exit
 #	power=$(echo "$num1 ^ $num2" | bc) does not accept floats as exponents
 # constant e ^ (num2 * natural log(num1)) = num1 ^ num2; -l for complicated math
-	elif [[ $(echo "$num1 + $num2" | bc) =~ \.[0-9]+ ]]; then
+	elif [[ ! $(echo "$num1 + $num2" | bc) =~ \.[0-9]+ ]]; then
 		result=$(echo "e($num2 * l($num1))" | bc -l)
 	else result=$(echo "$num1 ^ $num2" | bc)	
 	fi
 	echo "The power is $result"
+	num1=$result
 # if intent is not supported, promise future functionality
 else echo "More functionality coming soon."
 #end of if/else statement
