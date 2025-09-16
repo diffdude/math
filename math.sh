@@ -1,15 +1,10 @@
 #!/usr/bin/env bash
-# non-number error
 nonnum="Please use only numeric inputs"
 start() {
-# determine user intent to add or subtract
-# printf allows line breaks more consistently than echo
-# line can be broken with \n or a line break in the quote
 	printf "What would you like to do?\n[add] [subtract] [divide] [multiply] [exponent]\n"
 	read intent
 	code
 }
-#checks that input are numeric, prints error and exits if not
 validate_numeric() {
 	if
 		[[ $num1 =~ [a-zA-Z] ]]; then
@@ -21,7 +16,6 @@ validate_numeric() {
 			exit
 	fi
 }
-# asks to coninue operations, quits if not
 continoo(){
 	printf "Would you like to perform an operation on $result? [Y/N]
 "
@@ -34,11 +28,9 @@ continoo(){
 		exit
 	fi
 }
-# reassigns initial input to result of operation 
 operator_reassign() {
 	num1=$result
 }
-#checks if num1 is defined (continuation), takes both inputs if not
 continoo_check(){
 	if
 		[[ -z "$num1" ]]; then
@@ -47,35 +39,28 @@ continoo_check(){
 		input2
 	fi
 }
-# main body of code; interprets intent input, allows math operations
 code() {
-# subtract operation
 if
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "subtract" ]]; then
-# input funcion definitions
 		input2() {
-		echo "Enter a number to subtract"
-		read num2
-	}
+			echo "Enter a number to subtract"
+			read num2
+		}
 		input1() {
-		echo "Enter a number to reduce"
-		read num1
-		input2
-	}
-# checks if num1 is defined and defines empty variable
+			echo "Enter a number to reduce"
+			read num1
+			input2
+		}
 	continoo_check
 	validate_numeric
-# creates result variable as num1 - num2 and pipes it into basic calculator to allow floats
 	result=$(echo "$num1 - $num2" | bc)
-# prints result and offers to continue operations on result
 	printf "The difference is $result \n"
 	continoo
-# if intent is to add, accept inputs for addition operation
 elif
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "add" ]]; then
 		input2() {
-		echo "Enter a number to add"
-		read num2
+			echo "Enter a number to add"
+			read num2
 		}
 		input1() {
 			echo "Enter a number to increase"
@@ -84,11 +69,9 @@ elif
 		}
 	continoo_check
 	validate_numeric
-# creates result variable as num1 + num2 and pipes it into basic calculator to allow floats
 	result=$(echo "$num1 + $num2" | bc)
 	printf "The sum is $result \n"
 	continoo
-# if intent is to divide, run code to divide
 elif
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]]; then
 		input2() {
@@ -102,29 +85,22 @@ elif
 		}
 	continoo_check
 	validate_numeric
-# if denominator input is 0, print cannot divide by zero and exit script
 	if
 		[[ $num2 = 0 ]]; then
 			echo "Cannot divide by zero"
 			exit
-# creates quotient variable as num1 / num2 and pipes it into basic calculator to allow division
-# scale=13 to allow 13 decimal places
 	else
 		quotient_13=$(echo "scale=13; $num1 / $num2" | bc)
-# creates integer quotient variable with no scale to force an integer result
 		quotient_integer=$(echo "$num1 / $num2" | bc)
 	fi
-# if quotient_13=quotient_integer with 13 trailing zeros, result is integer
 	if
 		[[ $quotient_13 = $quotient_integer.0000000000000 ]]; then
 			result=$quotient_integer
-# if quotient_13 is indeed a float, result is scale13 quotient without trailing zeros
 	else
 		result=$(echo "$quotient_13" | sed 's/0*$//')
 	fi
 	printf "The quotient is $result \n"
 	continoo
-# if intent is to multiply, run multiplication code
 elif [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]]; then
 	input2() {
 		echo "Enter another number to multiply"
@@ -137,12 +113,9 @@ elif [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]]; then
 	}
 	continoo_check
 	validate_numeric
-# creates a product variable
 	result=$(echo "$num1 * $num2" | bc)
-# returns the product
 	printf "The product is $result \n"
 	continoo
-# if intent is exponent, run exponent code
 elif
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]]; then
 		input2() {
@@ -174,13 +147,10 @@ elif
 	fi
 	printf "The power is $result \n"
 	continoo
-# if intent is not supported, promise future functionality
 else
 	echo "More functionality coming soon."
 	exit
-#end of if/else statement
 fi
 }
-#end of functions
 start
 exit
