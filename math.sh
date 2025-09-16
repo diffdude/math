@@ -9,9 +9,43 @@ start() {
 	read intent
 	code
 }
+#checks that input are numeric, prints error and exits if not
+validate_numeric() {
+	if
+		[[ $num1 =~ [a-zA-Z] ]]; then
+			echo $nonnum
+			exit
+	elif
+		[[ $num2 =~ [a-zA-Z] ]]; then
+			echo $nonnum
+			exit
+	fi
+}
+# asks to coninue operations, quits if not
+continoo(){
+	printf "Would you like to perform an operation on $result? [Y/N]
+"
+	read continue
+	if
+		[[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
+			operator_reassign
+			start
+	else
+		exit
+	fi
+}
 # reassigns initial input to result of operation 
 operator_reassign() {
 	num1=$result
+}
+#checks if num1 is defined (continuation), takes both inputs if not
+continoo_check(){
+	if
+		[[ -z "$num1" ]]; then
+			input1
+	else
+		input2
+	fi
 }
 # main body of code; interprets intent input, allows math operations
 code() {
@@ -29,38 +63,13 @@ if
 		input2
 	}
 # checks if num1 is defined and defines empty variable
-	if
-		[[ -z "$num1" ]]; then
-			input1
-	else
-		input2
-	fi
-# makes sure inputs are numeric, exits if not
-	if
-		[[ $num1 =~ [a-zA-Z] ]]; then
-			echo $nonnum
-			exit
-	elif
-		[[ $num2 =~ [a-zA-Z] ]]; then
-			echo $nonnum
-			exit
+	continoo_check
+	validate_numeric
 # creates result variable as num1 - num2 and pipes it into basic calculator to allow floats
-	else
-		result=$(echo "$num1 - $num2" | bc)
-	fi
+	result=$(echo "$num1 - $num2" | bc)
 # prints result and offers to continue operations on result
-	printf "The difference is $result
-Would you like to perform an operation on $result? [y/n]
-	"
-	read continue
-# if continue is chosen, start script again
-	if
-		[[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
-			operator_reassign
-			start
-	else
-		exit
-	fi
+	printf "The difference is $result \n"
+	continoo
 # if intent is to add, accept inputs for addition operation
 elif
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "add" ]]; then
@@ -73,35 +82,12 @@ elif
 			read num1
 			input2
 		}
-	if
-		[[ -z "$num1" ]]; then
-			input1
-	else
-		input2
-	fi
-	if
-		[[ $num1 =~ [a-zA-Z] ]]; then
-			echo $nonnum
-			exit
-	elif
-		[[ $num2 =~ [a-zA-Z] ]]; then
-			echo $nonnum
-			exit
+	continoo_check
+	validate_numeric
 # creates result variable as num1 + num2 and pipes it into basic calculator to allow floats
-	else
-		result=$(echo "$num1 + $num2" | bc)
-	fi
-	printf "The sum is $result
-Would you like to perform an operation on $result? [y/n]
-	"
-	read continue
-	if
-		[[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
-			operator_reassign
-			start
-	else
-		exit
-	fi
+	result=$(echo "$num1 + $num2" | bc)
+	printf "The sum is $result \n"
+	continoo
 # if intent is to divide, run code to divide
 elif
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]]; then
@@ -114,22 +100,10 @@ elif
 			read num1
 			input2
 		}
-	if
-		[[ -z "$num1" ]]; then
-		input1
-	else
-		input2
-	fi
-	if
-		[[ $num1 =~ [a-zA-Z] ]]; then
-			echo $nonnum
-			exit
-	elif
-		[[ $num2 =~ [a-zA-Z] ]]; then
-			echo $nonnum
-			exit
+	continoo_check
+	validate_numeric
 # if denominator input is 0, print cannot divide by zero and exit script
-	elif
+	if
 		[[ $num2 = 0 ]]; then
 			echo "Cannot divide by zero"
 			exit
@@ -146,19 +120,10 @@ elif
 			result=$quotient_integer
 # if quotient_13 is indeed a float, result is scale13 quotient without trailing zeros
 	else
-		result=$(echo "$quotient_13" | sed 's/0$//')
+		result=$(echo "$quotient_13" | sed 's/0*$//')
 	fi
-	printf "The quotient is $result
-Would you like to perform an operation on $result? [y/n]
-	"
-	read continue
-	if
-		[[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
-			operator_reassign
-			start
-	else
-		exit
-	fi
+	printf "The quotient is $result \n"
+	continoo
 # if intent is to multiply, run multiplication code
 elif [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]]; then
 	input2() {
@@ -170,37 +135,13 @@ elif [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]]; then
 		read num1
 		input2
 	}
-# check if $num1 is defined
-	if
-		[[ -z "$num1" ]]; then
-			input1
-	else
-		input2
-	fi
-	if
-		[[ $num1 =~ [a-zA-Z] ]]; then
-			echo $nonnum
-			exit
-	elif
-		[[ $num2 =~ [a-zA-Z] ]]; then
-			echo $nonnum
-			exit
+	continoo_check
+	validate_numeric
 # creates a product variable
-	else
-		result=$(echo "$num1 * $num2" | bc)
-	fi
+	result=$(echo "$num1 * $num2" | bc)
 # returns the product
-	printf "The product is $result
-Would you like to perform an operation on $result? [y/n]
-	"
-	read continue
-	if
-		[[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
-			operator_reassign
-			start
-	else
-		exit
-	fi
+	printf "The product is $result \n"
+	continoo
 # if intent is exponent, run exponent code
 elif
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]]; then
@@ -213,22 +154,9 @@ elif
 			read num1
 			input2
 		}
-# check if $num1 is defined
+	continoo_check
+	validate_numeric
 	if
-		[[ -z "$num1" ]]; then
-			input1
-	else
-		input2
-	fi
-	if
-		[[ $num1 =~ [a-zA-Z] ]]; then
-			echo $nonnum
-			exit
-	elif
-		[[ $num2 =~ [a-zA-Z] ]]; then
-			echo $nonnum
-			exit
-	elif
 		[[ $num1 = 0 ]]; then
 			printf "The power is 0\n"
 			exit
@@ -244,17 +172,8 @@ elif
 	else
 		result=$(echo "$num1 ^ $num2" | bc)	
 	fi
-	printf "The power is $result
-Would you like to perform an operation on $result? [y/n]
-	"
-	read continue
-	if
-		[[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
-			operator_reassign
-			start
-	else
-		exit
-	fi
+	printf "The power is $result \n"
+	continoo
 # if intent is not supported, promise future functionality
 else
 	echo "More functionality coming soon."
