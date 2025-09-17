@@ -16,15 +16,26 @@ continoo_check(){
 	esac
 }
 validate_numeric() {
-	if
-		[[ $num1 =~ [a-zA-Z] ]]; then
+	case $num1 in
+		*[a-zZ-A]*)
 			echo $nonnum
 			exit
-	elif
-		[[ $num2 =~ [a-zA-Z] ]]; then
+		;;
+	esac
+	case $num2 in
+		*[a-zZ-A]*)
 			echo $nonnum
 			exit
-	fi
+	esac
+#	if
+#		[[ $num1 =~ [a-zA-Z] ]]; then
+#			echo $nonnum
+#			exit
+#	elif
+#		[[ $num2 =~ [a-zA-Z] ]]; then
+#			echo $nonnum
+#			exit
+#	fi
 }
 continoo(){
 	printf "Would you like to perform an operation on $result? [Y/N]
