@@ -20,27 +20,30 @@ continoo_check(){
 validate_numeric() {
 	case $num1 in
 		*[a-zZ-A]*)
-			echo $nonnum
-			exit
-		;;
+			echo $nonnum && exit ;;
 	esac
 	case $num2 in
 		*[a-zZ-A]*)
-			echo $nonnum
-			exit
+			echo $nonnum && exit ;;
 	esac
 }
 continoo(){
-	printf "Would you like to perform an operation on $result? [Y/N]
-"
+	printf "Would you like to perform an operation on $result? [Y/N] \n"
 	read contin
-	if
-		[[ "$(echo "$contin" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
-			reassign
-			start
-	else
-		exit
-	fi
+	contin=$(echo "$contin" | tr '[:upper:]' '[:lower:]')
+	case $contin in
+		"y")
+			reassign && start ;;
+		*)
+			exit ;;
+	esac
+#	if
+#		[[ "$(echo "$contin" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
+#			reassign
+#			start
+#	else
+#		exit
+#	fi
 }
 reassign() {
 	num1=$result
