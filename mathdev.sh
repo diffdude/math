@@ -140,16 +140,18 @@ code() {
 #				printf "The power is 1\n"
 #				exit
 #			fi
-#			result=$(echo "scale=20; $num1 + $num2" | bc -l)
-#			case result in
-#				$.[0-9]+) result=$(echo "scale=20; e($num2 * l($num1))" | bc -l) ;;
-#				*) result=$(echo "$num1 ^ $num2" | bc -l) ;;
-#			esac
-			if [[ $(echo "$num1 + $num2" | bc) =~ \.[0-9]+ ]]; then
-				result=$(echo "e($num2 * l($num1))" | bc -l)
-			else
-				result=$(echo "$num1 ^ $num2" | bc -l)	
-			fi
+## Does not work ##
+			result=$(echo "$num1 + $num2" | bc -l)
+			case $result in
+				*.*) result=$(echo "e($num2 * l($num1))" | bc -l) ;;
+				*) result=$(echo "$num1 ^ $num2" | bc -l) ;;
+			esac
+##
+#			if [[ $(echo "$num1 + $num2" | bc) =~ \.[0-9]+ ]]; then
+#				result=$(echo "e($num2 * l($num1))" | bc -l)
+#			else
+#				result=$(echo "$num1 ^ $num2" | bc -l)	
+#			fi
 			result_normalize
 			printf "The power is $result \n"
 			continoo
