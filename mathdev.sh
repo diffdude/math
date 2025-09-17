@@ -29,9 +29,9 @@ validate_numeric() {
 continoo(){
 	printf "Would you like to perform an operation on $result? [Y/N]
 "
-	read continue
+	read contin
 	if
-		[[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
+		[[ "$(echo "$contin" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
 			reassign
 			start
 	else
@@ -144,7 +144,7 @@ elif
 		[[ $(echo "$num1 + $num2" | bc) =~ \.[0-9]+ ]]; then
 			result=$(echo "e($num2 * l($num1))" | bc -l)
 	else
-		result=$(echo "$num1 ^ $num2" | bc)	
+		result=$(echo "$num1 ^ $num2" | bc -l)	
 	fi
 	printf "The power is $result \n"
 	continoo
