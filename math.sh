@@ -3,6 +3,7 @@ nonnum="Please use only numeric inputs"
 start() {
 	printf "What would you like to do?\n[add] [subtract] [divide] [multiply] [exponent]\n"
 	read intent
+	intent_lower=$(echo "$intent" | tr '[:upper:]' '[:lower:]')
 	code
 }
 continoo_check(){
@@ -24,12 +25,15 @@ validate_numeric() {
 			exit
 	fi
 }
+result_normalize(){
+	result=$(echo "$result" | sed 's/0*$//' | sed 's/\.$//')
+}
 continoo(){
 	printf "Would you like to perform an operation on $result? [Y/N]
 "
-	read continue
+	read continu
 	if
-		[[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
+		[[ "$(echo "$continu" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
 			reassign
 			start
 	else
@@ -40,8 +44,8 @@ reassign() {
 	num1=$result
 }
 code() {
-if
-	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "subtract" ]]; then
+case $intent_lower in
+	subtract)
 		input2() {
 			echo "Enter a number to subtract"
 			read num2
@@ -51,13 +55,14 @@ if
 			read num1
 			input2
 		}
-	continoo_check
-	validate_numeric
-	result=$(echo "$num1 - $num2" | bc)
-	printf "The difference is $result \n"
-	continoo
-elif
-	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "add" ]]; then
+		continoo_check
+		validate_numeric
+		result=$(echo "$num1 - $num2" | bc)
+		result_normalize
+		printf "The difference is $result \n"
+		continoo
+		;;
+	add)
 		input2() {
 			echo "Enter a number to add"
 			read num2
@@ -67,13 +72,14 @@ elif
 			read num1
 			input2
 		}
-	continoo_check
-	validate_numeric
-	result=$(echo "$num1 + $num2" | bc)
-	printf "The sum is $result \n"
-	continoo
-elif
-	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]]; then
+		continoo_check
+		validate_numeric
+		result=$(echo "$num1 + $num2" | bc)
+		result_normalize
+		printf "The sum is $result \n"
+		continoo
+		;;
+	divide)
 		input2() {
 			echo "Enter a denominator to divide by"
 			read num2
@@ -83,41 +89,37 @@ elif
 			read num1
 			input2
 		}
-	continoo_check
-	validate_numeric
-	if
-		[[ $num2 = 0 ]]; then
-			echo "Cannot divide by zero"
-			exit
-	else
-		quotient_13=$(echo "scale=13; $num1 / $num2" | bc)
-		quotient_integer=$(echo "$num1 / $num2" | bc)
-	fi
-	if
-		[[ $quotient_13 = $quotient_integer.0000000000000 ]]; then
-			result=$quotient_integer
-	else
-		result=$(echo "$quotient_13" | sed 's/0*$//')
-	fi
-	printf "The quotient is $result \n"
-	continoo
-elif [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]]; then
-	input2() {
-		echo "Enter another number to multiply"
-		read num2
+		continoo_check
+		validate_numeric
+		if
+			[[ $num2 = 0 ]]; then
+				echo "Cannot divide by zero"
+				exit
+		else
+			result=$(echo "scale=13; $num1 / $num2" | bc)
+		fi
+		result_normalize
+		printf "The quotient is $result \n"
+		continoo
+		;;
+	multiply)
+		input2() {
+			echo "Enter another number to multiply"
+			read num2
 		}
-	input1() {
-		echo "Enter a number to multiply"
-		read num1
-		input2
-	}
-	continoo_check
-	validate_numeric
-	result=$(echo "$num1 * $num2" | bc)
-	printf "The product is $result \n"
-	continoo
-elif
-	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]]; then
+		input1() {
+			echo "Enter a number to multiply"
+			read num1
+			input2
+		}
+		continoo_check
+		validate_numeric
+		result=$(echo "$num1 * $num2" | bc)
+		result_normalize
+		printf "The product is $result \n"
+		continoo
+		;;
+	exponent)
 		input2() {
 			echo "Enter an exponent"
 			read num2
@@ -127,29 +129,32 @@ elif
 			read num1
 			input2
 		}
-	continoo_check
-	validate_numeric
-	if
-		[[ $num1 = 0 ]]; then
-			printf "The power is 0\n"
-			exit
-	elif
-		[[ $num2 = 0 ]]; then
-			printf "The power is 1\n"
-			exit
+		continoo_check
+		validate_numeric
+		if
+			[[ $num1 = 0 ]]; then
+				printf "The power is 0\n"
+				exit
+		elif
+			[[ $num2 = 0 ]]; then
+				printf "The power is 1\n"
+				exit
 #	power=$(echo "$num1 ^ $num2" | bc) does not accept floats as exponents
-	elif
-		[[ $(echo "$num1 + $num2" | bc) =~ \.[0-9]+ ]]; then
-			result=$(echo "e($num2 * l($num1))" | bc -l)
-	else
-		result=$(echo "$num1 ^ $num2" | bc)	
-	fi
-	printf "The power is $result \n"
-	continoo
-else
-	echo "More functionality coming soon."
-	exit
-fi
+		elif
+			[[ $(echo "$num1 + $num2" | bc) =~ \.[0-9]+ ]]; then
+				result=$(echo "e($num2 * l($num1))" | bc -l)
+		else
+			result=$(echo "$num1 ^ $num2" | bc)	
+		fi
+		result_normalize
+		printf "The power is $result \n"
+		continoo
+		;;
+	*)
+		echo "More functionality coming soon."
+		exit
+		;;
+esac
 }
 start
 exit

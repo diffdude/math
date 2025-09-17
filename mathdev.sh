@@ -31,9 +31,9 @@ result_normalize(){
 continoo(){
 	printf "Would you like to perform an operation on $result? [Y/N]
 "
-	read continue
+	read continu
 	if
-		[[ "$(echo "$continue" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
+		[[ "$(echo "$continu" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
 			reassign
 			start
 	else
