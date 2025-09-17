@@ -6,14 +6,16 @@ start() {
 	code
 }
 continoo_check(){
-	case "$num1" in
-		"")
-			input1
-		;;
-		*)
-			input2
-		;;
-	esac
+	[ -z "$num1" ] && input1
+	input2
+#	case "$num1" in
+#		"")
+#			input1
+#		;;
+#		*)
+#			input2
+#		;;
+#	esac
 }
 validate_numeric() {
 	case $num1 in
@@ -27,15 +29,6 @@ validate_numeric() {
 			echo $nonnum
 			exit
 	esac
-#	if
-#		[[ $num1 =~ [a-zA-Z] ]]; then
-#			echo $nonnum
-#			exit
-#	elif
-#		[[ $num2 =~ [a-zA-Z] ]]; then
-#			echo $nonnum
-#			exit
-#	fi
 }
 continoo(){
 	printf "Would you like to perform an operation on $result? [Y/N]
@@ -62,7 +55,6 @@ if
 		input1() {
 			echo "Enter a number to reduce"
 			read num1
-			input2
 		}
 	continoo_check
 	validate_numeric
@@ -78,7 +70,6 @@ elif
 		input1() {
 			echo "Enter a number to increase"
 			read num1
-			input2
 		}
 	continoo_check
 	validate_numeric
@@ -94,7 +85,6 @@ elif
 		input1() {
 			echo "Enter a numerator to divide"
 			read num1
-			input2
 		}
 	continoo_check
 	validate_numeric
@@ -122,7 +112,6 @@ elif [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]]; then
 	input1() {
 		echo "Enter a number to multiply"
 		read num1
-		input2
 	}
 	continoo_check
 	validate_numeric
@@ -138,7 +127,6 @@ elif
 		input1() {
 			echo "Enter a base to be exponentiated"
 			read num1
-			input2
 		}
 	continoo_check
 	validate_numeric
