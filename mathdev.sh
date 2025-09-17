@@ -14,12 +14,6 @@ continoo_check(){
 			input2
 		;;
 	esac
-#	if
-#		[[ -z "$num1" ]]; then
-#			input1
-#	else
-#		input2
-#	fi
 }
 validate_numeric() {
 	if
@@ -51,7 +45,7 @@ code() {
 if
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "subtract" ]]; then
 		input2() {
-			echo "Enter a number to subtract"
+			echo "Enter a number to subtract from $num1"
 			read num2
 		}
 		input1() {
@@ -67,7 +61,7 @@ if
 elif
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "add" ]]; then
 		input2() {
-			echo "Enter a number to add"
+			echo "Enter a number to add to $num1"
 			read num2
 		}
 		input1() {
@@ -83,7 +77,7 @@ elif
 elif
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "divide" ]]; then
 		input2() {
-			echo "Enter a denominator to divide by"
+			echo "Enter a denominator to divide $num1 by"
 			read num2
 		}
 		input1() {
@@ -111,7 +105,7 @@ elif
 	continoo
 elif [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]]; then
 	input2() {
-		echo "Enter another number to multiply"
+		echo "Enter a number to multiply $num1 by"
 		read num2
 		}
 	input1() {
@@ -127,7 +121,7 @@ elif [[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "multiply" ]]; then
 elif
 	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "exponent" ]]; then
 		input2() {
-			echo "Enter an exponent"
+			echo "Enter an exponent for $num1"
 			read num2
 		}
 		input1() {
