@@ -48,13 +48,12 @@ code() {
 				echo "Enter a number to increase"
 				read num1
 			}
-				continoo_check
-				validate_numeric
-				result=$(echo "$num1 + $num2" | bc)
-				result_normalize
-				printf "The sum is $result \n"
-				continoo
-		;;
+			continoo_check
+			validate_numeric
+			result=$(echo "$num1 + $num2" | bc)
+			result_normalize
+			printf "The sum is $result \n"
+			continoo ;;
 		"subtract")
 			input2() {
 				echo "Enter a number to subtract from $num1"
@@ -69,8 +68,7 @@ code() {
 			result=$(echo "$num1 - $num2" | bc)
 			result_normalize
 			printf "The difference is $result \n"
-			continoo
-		;;
+			continoo ;;
 		"multiply")
 			input2() {
 				echo "Enter a number to multiply $num1 by"
@@ -85,8 +83,7 @@ code() {
 			result=$(echo "$num1 * $num2" | bc)
 			result_normalize
 			printf "The product is $result \n"
-			continoo
-		;;
+			continoo ;;
 		"divide")
 			input2() {
 				echo "Enter a denominator to divide $num1 by"
@@ -105,15 +102,14 @@ code() {
 				quotient_13=$(echo "scale=13; $num1 / $num2" | bc)
 				quotient_integer=$(echo "$num1 / $num2" | bc)
 			fi
-			if [[ $quotient_13 = $quotient_integer.0000000000000 ]]; then
+			if [[ $quotient_13 = $(echo "scale=13; $quotient_integer"| bc) ]]; then
 				result=$quotient_integer
 			else
 				result=$(echo "$quotient_13")
 			fi
 			result_normalize
 			printf "The quotient is $result \n"
-			continoo
-		;;
+			continoo ;;
 		"exponent")
 			input2() {
 				echo "Enter an exponent for $num1"
@@ -127,35 +123,18 @@ code() {
 			validate_numeric
 			case 0 in
 				$num1)
-					printf "The power is 0\n" && continoo
-				;;
+					printf "The power is 0\n" && result=0 && continoo ;;
 				$num2)
-					printf "The power is 1\n" && continoo
-				;;
+					printf "The power is 1\n" && result=1 && continoo ;;
 			esac
-#			if [[ $num1 = 0 ]]; then
-#				printf "The power is 0\n"
-#				exit
-#			elif [[ $num2 = 0 ]]; then
-#				printf "The power is 1\n"
-#				exit
-#			fi
-## Does not work ##
 			result=$(echo "$num1 + $num2" | bc -l)
 			case $result in
 				*.*) result=$(echo "e($num2 * l($num1))" | bc -l) ;;
 				*) result=$(echo "$num1 ^ $num2" | bc -l) ;;
 			esac
-##
-#			if [[ $(echo "$num1 + $num2" | bc) =~ \.[0-9]+ ]]; then
-#				result=$(echo "e($num2 * l($num1))" | bc -l)
-#			else
-#				result=$(echo "$num1 ^ $num2" | bc -l)	
-#			fi
 			result_normalize
 			printf "The power is $result \n"
-			continoo
-		;;
+			continoo ;;
 		*)
 			echo "More functionality coming soon."
 			exit
