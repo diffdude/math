@@ -6,12 +6,20 @@ start() {
 	code
 }
 continoo_check(){
-	if
-		[[ -z "$num1" ]]; then
+	case "$num1" in
+		"")
 			input1
-	else
-		input2
-	fi
+		;;
+		*)
+			input2
+		;;
+	esac
+#	if
+#		[[ -z "$num1" ]]; then
+#			input1
+#	else
+#		input2
+#	fi
 }
 validate_numeric() {
 	if
