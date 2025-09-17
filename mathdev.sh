@@ -9,14 +9,6 @@ start() {
 continoo_check(){
 	[ -z "$num1" ] && input1
 	input2
-#	case "$num1" in
-#		"")
-#			input1
-#		;;
-#		*)
-#			input2
-#		;;
-#	esac
 }
 validate_numeric() {
 	case $num1 in
@@ -28,6 +20,9 @@ validate_numeric() {
 			echo $nonnum && exit ;;
 	esac
 }
+result_normalize(){
+	result=$(echo "$result" | sed 's/\.0*$//' | sed 's/\.$//')
+}
 continoo(){
 	printf "Would you like to perform an operation on $result? [Y/N] \n"
 	read contin
@@ -38,13 +33,6 @@ continoo(){
 		*)
 			exit ;;
 	esac
-#	if
-#		[[ "$(echo "$contin" | tr '[:upper:]' '[:lower:]')" = "y" ]]; then
-#			reassign
-#			start
-#	else
-#		exit
-#	fi
 }
 reassign() {
 	num1=$result
@@ -63,6 +51,7 @@ code() {
 				continoo_check
 				validate_numeric
 				result=$(echo "$num1 + $num2" | bc)
+				result_normalize
 				printf "The sum is $result \n"
 				continoo
 		;;
@@ -78,6 +67,7 @@ code() {
 			continoo_check
 			validate_numeric
 			result=$(echo "$num1 - $num2" | bc)
+			result_normalize
 			printf "The difference is $result \n"
 			continoo
 		;;
@@ -93,6 +83,7 @@ code() {
 			continoo_check
 			validate_numeric
 			result=$(echo "$num1 * $num2" | bc)
+			result_normalize
 			printf "The product is $result \n"
 			continoo
 		;;
@@ -117,8 +108,9 @@ code() {
 			if [[ $quotient_13 = $quotient_integer.0000000000000 ]]; then
 				result=$quotient_integer
 			else
-				result=$(echo "$quotient_13" | sed 's/0*$//')
+				result=$(echo "$quotient_13")
 			fi
+			result_normalize
 			printf "The quotient is $result \n"
 			continoo
 		;;
@@ -145,9 +137,13 @@ code() {
 			else
 				result=$(echo "$num1 ^ $num2" | bc -l)	
 			fi
+			result_normalize
 			printf "The power is $result \n"
 			continoo
 		;;
+		*)
+			echo "More functionality coming soon."
+			exit
 	esac
 #if
 #	[[ "$(echo "$intent" | tr '[:upper:]' '[:lower:]')" = "subtract" ]]; then
