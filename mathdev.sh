@@ -6,11 +6,9 @@ start() {
 	intent=$(echo "$intent" | tr '[:upper:]' '[:lower:]')
 	code
 }
-continoo_check(){
+validate_numeric() {
 	[ -z "$num1" ] && input1
 	input2
-}
-validate_numeric() {
 	case $num1 in
 		*[a-zZ-A]*)
 			echo $nonnum && exit ;;
@@ -48,7 +46,6 @@ code() {
 				echo "Enter a number to increase"
 				read num1
 			}
-			continoo_check
 			validate_numeric
 			result=$(echo "$num1 + $num2" | bc)
 			result_normalize
@@ -63,7 +60,6 @@ code() {
 				echo "Enter a number to reduce"
 				read num1
 			}
-			continoo_check
 			validate_numeric
 			result=$(echo "$num1 - $num2" | bc)
 			result_normalize
@@ -78,7 +74,6 @@ code() {
 				echo "Enter a number to multiply"
 				read num1
 			}
-			continoo_check
 			validate_numeric
 			result=$(echo "$num1 * $num2" | bc)
 			result_normalize
@@ -93,7 +88,6 @@ code() {
 				echo "Enter a numerator to divide"
 				read num1
 			}
-			continoo_check
 			validate_numeric
 			if [[ $num2 = 0 ]]; then
 				echo "Cannot divide by zero"
@@ -119,7 +113,6 @@ code() {
 				echo "Enter a base to be exponentiated"
 				read num1
 			}
-			continoo_check
 			validate_numeric
 			case 0 in
 				$num1)
