@@ -18,18 +18,14 @@ validate_numeric() {
 			echo $nonnum && exit ;;
 	esac
 }
-result_normalize(){
+result(){
 	result=$(echo "$result" | sed 's/\.0*$//' | sed 's/\.$//')
-}
-continoo(){
-	printf "Would you like to perform an operation on $result? [Y/N] \n"
+	printf "The $ans is $result.\nWould you like to perform an operation on $result? [Y/N]\n"
 	read contin
 	contin=$(echo "$contin" | tr '[:upper:]' '[:lower:]')
 	case $contin in
-		"y")
-			reassign && start ;;
-		*)
-			exit ;;
+		"y") reassign && start ;;
+		*) exit;;
 	esac
 }
 reassign() {
@@ -38,6 +34,7 @@ reassign() {
 code() {
 	case $intent in
 		"add")
+			ans=$(echo "sum")
 			input2() {
 				echo "Enter a number to add to $num1"
 				read num2
@@ -48,10 +45,9 @@ code() {
 			}
 			validate_numeric
 			result=$(echo "$num1 + $num2" | bc)
-			result_normalize
-			printf "The sum is $result \n"
-			continoo ;;
+			result ;;
 		"subtract")
+			ans=$(echo "difference")
 			input2() {
 				echo "Enter a number to subtract from $num1"
 				read num2
@@ -62,10 +58,9 @@ code() {
 			}
 			validate_numeric
 			result=$(echo "$num1 - $num2" | bc)
-			result_normalize
-			printf "The difference is $result \n"
-			continoo ;;
+			result ;;
 		"multiply")
+			ans=$(echo "product")
 			input2() {
 				echo "Enter a number to multiply $num1 by"
 				read num2
@@ -76,10 +71,9 @@ code() {
 			}
 			validate_numeric
 			result=$(echo "$num1 * $num2" | bc)
-			result_normalize
-			printf "The product is $result \n"
-			continoo ;;
+			result ;;
 		"divide")
+			ans=$(echo "quotient")
 			input2() {
 				echo "Enter a denominator to divide $num1 by"
 				read num2
@@ -101,10 +95,9 @@ code() {
 			else
 				result=$(echo "$quotient_13")
 			fi
-			result_normalize
-			printf "The quotient is $result \n"
-			continoo ;;
+			result ;;
 		"exponent")
+			ans=$(echo "power")
 			input2() {
 				echo "Enter an exponent for $num1"
 				read num2
@@ -125,9 +118,7 @@ code() {
 				*.*) result=$(echo "e($num2 * l($num1))" | bc -l) ;;
 				*) result=$(echo "$num1 ^ $num2" | bc -l) ;;
 			esac
-			result_normalize
-			printf "The power is $result \n"
-			continoo ;;
+			result ;;
 		*)
 			echo "More functionality coming soon."
 			exit
